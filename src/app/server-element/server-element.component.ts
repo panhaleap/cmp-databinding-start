@@ -9,7 +9,10 @@ import {
   AfterContentChecked,
   AfterViewInit,
   AfterViewChecked,
-  OnDestroy} from '@angular/core';
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  ContentChild} from '@angular/core';
 
 @Component({
   selector: 'app-server-element',
@@ -31,9 +34,11 @@ export class ServerElementComponent implements
   // tslint:disable-next-line: no-input-rename
   @Input('srvElement') element: {type: string, name: string, content: string};
   @Input() name: string;
+  @ViewChild('heading') header: ElementRef;
+  @ContentChild('contentParagraph') paragraph: ElementRef;
 
   // 1st
-  constructor() { 
+  constructor() {
     console.log('constructor called!');
   }
 
@@ -48,8 +53,11 @@ export class ServerElementComponent implements
 
   // called once the component is initialized. It run after constructor.
   // 3rd
+  // this.header is undefined because DOM hasn't render yet.
   ngOnInit(): void {
     console.log('ngOnInit called!');
+    console.log('Text Content', this.header?.nativeElement?.textContent);
+    console.log('Text Content of Paragraph', this.paragraph?.nativeElement?.textContent);
   }
 
   // called during every change detection run. Run when something are changed in the template or in component.
@@ -61,6 +69,7 @@ export class ServerElementComponent implements
   // called after content(ng-content) has been projected into view.
   ngAfterContentInit() {
     console.log('ngAfterContentInit called!');
+    console.log('Text Content of Paragraph', this.paragraph?.nativeElement?.textContent);
   }
 
   // called every time the projected content has been checked.
@@ -69,8 +78,11 @@ export class ServerElementComponent implements
   }
 
   // called after the component's view (and child views) has been initialized.
+  // This can called the value of this.header?.nativeElement?.textContent is after DOM already random.
   ngAfterViewInit() {
     console.log('ngAfterViewInit called!');
+    console.log('Header', this.header);
+    console.log('Text Content', this.header?.nativeElement?.textContent);
   }
 
   // called every time the view (and child views) have been checked.
